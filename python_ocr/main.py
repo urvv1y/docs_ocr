@@ -5,7 +5,11 @@
 # imports needed for the project
 import re
 import pytesseract
+import FastAPI, File, UploadFile
 from PIL import Image
+
+# FastApi init
+app = FastAPI()
 
 # setting the path for tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -53,8 +57,14 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
             result[key] = None
     return result
 
-# testing print
-# print(extract_data("doc_test.jpg", "ces"))
+# ***
+# FastAPI
+# ***
+@app.post("/extract")
+async def process(file: UploadFile = File(...), lang: str="ces"):
+    read_file = await file.read()
+    return {"status": "success",
+            "data": result}
 
 
 
