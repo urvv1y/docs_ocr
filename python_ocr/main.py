@@ -77,6 +77,7 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
     return {"status": "success",
             "data": extracted_data}
 
+# run FastApi server: uvicorn main:app --reload
 
 
 
