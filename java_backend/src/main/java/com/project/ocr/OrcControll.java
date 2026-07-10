@@ -6,6 +6,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +21,11 @@ public class OrcControll {
     private final RestClient restClient;
 
     public OrcControll() {
-        this.restClient = RestClient.create("http.//localhost:8000");
+        this.restClient = RestClient.create("http://localhost:8000");
     }
 
-    @PostMapping("/upload/")
-    public ResponseEntity<String> uploadImage(MultipartFile file, String lang) {
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,  @RequestParam(value = "lang", defaultValue = "ces") String lang) {
         try {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("file", file.getResource());
