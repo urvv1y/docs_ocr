@@ -5,7 +5,7 @@
 # imports needed for the project
 import re
 import pytesseract
-import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 
 # FastApi init
