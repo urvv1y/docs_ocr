@@ -4,6 +4,8 @@
 
 # imports needed for the project
 import re
+import os
+from unittest import result
 import pytesseract
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
@@ -63,8 +65,17 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
 @app.post("/extract")
 async def process(file: UploadFile = File(...), lang: str="ces"):
     read_file = await file.read()
+
+    with open(file.filename, "wb") as f:
+        f.write(read_file)
+
+    extracted_data = extract_data(file.filename, lang)
+
+    if os.path.exists(file.filename):
+        os.remove(file.filename)
+
     return {"status": "success",
-            "data": result}
+            "data": extracted_data}
 
 
 
