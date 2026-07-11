@@ -1,9 +1,12 @@
 package com.project.ocr;
 
+import jakarta.persistence.Entity;
+
 /**
  * @author urvvy1
  * Document: receipt
  */
+@Entity
 public class Receipt extends Document {
     private String store;
     private String date;
