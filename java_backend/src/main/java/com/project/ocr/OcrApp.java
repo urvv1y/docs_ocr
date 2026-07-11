@@ -8,3 +8,8 @@ public class OcrApp {
         SpringApplication.run(OcrApp.class, args);
     }
 }
+
+// http://localhost:8080/api/receipts
+// http://localhost:8080/h2-console
+// http://localhost:8080/api/upload
+

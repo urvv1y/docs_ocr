@@ -12,6 +12,8 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.GetMapping;
+import java.util.List;
 
 /**
  * @author urvv1y
@@ -48,7 +50,7 @@ public class OrcControll {
 
             String store = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asString() : dataNode.path("Merchant").asString(null);
             String date = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asString() : dataNode.path("Date").asString(null);
-            String payment = dataNode.hasNonNull("Platba")? dataNode.get("Platba").asString() : dataNode.path("Total").asString(null);
+            String payment = dataNode.hasNonNull("Platba")? dataNode.get("Platba").asString() : dataNode.path("Payment").asString(null);
             String total = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asString() : dataNode.path("Total").asString(null);
 
             Receipt receipt = new Receipt(store, date, payment, total);
@@ -58,6 +60,12 @@ public class OrcControll {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
+    }
+    @GetMapping("/receipts")
+    public ResponseEntity<List<Receipt>> getAllReceipts() {
+        List<Receipt> allReceipts = receiptRepository.findAll();
+        return ResponseEntity.ok(allReceipts);
     }
 
 }
