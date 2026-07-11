@@ -44,7 +44,7 @@ public class Receipt extends Document {
         return total;
     }
 
-    // Setter
+    // Setters
 
     public void setStore(String store) {
         this.store = store;
