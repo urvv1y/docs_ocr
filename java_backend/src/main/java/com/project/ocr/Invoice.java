@@ -1,6 +1,9 @@
 package com.project.ocr;
 
 import jakarta.persistence.Entity;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +23,7 @@ public class Invoice extends Document {
     private String seller;
     private String customer;
     private String description;
+    @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Map<String, String>> goods; //<Name, Map<Amount, Price per one piece>>
     private String totalPrice;
     private String paymentMethod;
