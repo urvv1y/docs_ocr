@@ -9,7 +9,7 @@ public class OcrApp {
     }
 }
 
-// http://localhost:8080/api/receipts
+// http://localhost:8080/api/receipts ; http://localhost:8080/api/invoices
 // http://localhost:8080/h2-console
 // http://localhost:8080/api/upload
 
