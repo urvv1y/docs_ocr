@@ -79,8 +79,7 @@ public class Invoice extends Document {
     }
 
     // Setters
-
-
+    
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
     }
