@@ -13,8 +13,8 @@ from PIL import Image
 # FastApi init
 app = FastAPI()
 
-# setting the path for tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# setting the path for tesseract executable NO NEED FOR DOCKER
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # constants
 SEARCH_PATTERNS_CZECH = {

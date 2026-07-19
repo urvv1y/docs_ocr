@@ -1,2 +1,4 @@
-- fix dissapering images
-- python script reads invoces
+- vyresit goods
+- api do ai
+- pre processing obrazu pomoci opencv
+- frontend
