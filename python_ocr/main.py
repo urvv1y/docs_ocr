@@ -58,7 +58,7 @@ def amount_cleaner(amount: str) -> str:
 """ Function to load and extract text from an image """
 def load_image(img_path: str, lang: str) -> str:
     opened_image = Image.open(img_path).convert("L")
-    image_text = pytesseract.image_to_string(opened_image, lang=lang)
+    image_text = pytesseract.image_to_string(opened_image, lang=lang, config='--psm 4')
     return image_text
 
 
