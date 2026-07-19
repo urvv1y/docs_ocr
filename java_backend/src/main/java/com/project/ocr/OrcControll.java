@@ -32,7 +32,7 @@ public class OrcControll {
     private final ObjectMapper objectMapper;
 
     public OrcControll(ReceiptRepository receiptRepository, InvoiceRepository invoiceRepository) {
-        this.restClient = RestClient.create("http://localhost:8000");
+        this.restClient = RestClient.create("http://ocr-python:8000");
         this.receiptRepository = receiptRepository;
         this.invoiceRepository = invoiceRepository;
         this.objectMapper = new ObjectMapper();
