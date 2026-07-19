@@ -77,7 +77,10 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
         match = re.search(pattern, doc_text)
 
         if match:
-            result[key] = match.group(1).strip()
+            val = match.group(1).strip()
+            if key in ["Celkem", "Total"]:
+                val = amount_cleaner(val)
+            result[key] = val
         else:
             result[key] = None
         
