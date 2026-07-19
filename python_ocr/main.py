@@ -28,7 +28,8 @@ SEARCH_PATTERNS_CZECH = {
     "Cislo_faktury": r"(?i)(?:Číslo faktury|Faktura č\.|Variabilní symbol):\s*([0-9A-Za-z]+)",
     "Datum_splatnosti": r"(?i)(?:Splatnost|Datum splatnosti):\s*([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{2,4})",
     "Odberatel": r"(?i)Odběratel:\s*(.+)",
-    "Banka": r"(?i)(?:Číslo účtu|Účet|IBAN):\s*([A-Za-z0-9/-]+)"
+    "Banka": r"(?i)(?:Číslo účtu|Účet|IBAN):\s*([A-Za-z0-9/-]+)",
+    "Popis": r"(?i)(?:Popis|Předmět|Účel):\s*(.+)"
 }
 
 SEARCH_PATTERNS_ENGLISH = {
@@ -42,7 +43,8 @@ SEARCH_PATTERNS_ENGLISH = {
     "Invoice_Number": r"(?i)Invoice No[.:]\s*([0-9A-Za-z]+)",
     "Due_Date": r"(?i)Due Date:\s*([0-9]{1,4}[-/\.][0-9]{1,2}[-/\.][0-9]{1,4})",
     "Customer": r"(?i)(?:Customer|Bill To):\s*(.+)",
-    "Bank": r"(?i)(?:Bank Account|IBAN|Account No):\s*([A-Za-z0-9/-]+)"
+    "Bank": r"(?i)(?:Bank Account|IBAN|Account No):\s*([A-Za-z0-9/-]+)",
+    "Description": r"(?i)(?:Description|Subject|Item):\s*(.+)"
 }
 
 
@@ -71,6 +73,11 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
             result[key] = match.group(1).strip()
         else:
             result[key] = None
+        
+        if lang == "ces":
+            result["Zbozi"] = {}
+        else:
+            result["Goods"] = {}
     return result
 
 # ***
@@ -84,6 +91,9 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
         f.write(read_file)
 
     extracted_data = extract_data(file.filename, lang)
+
+    if os.path.exists(file.filename):
+        os.remove(file.filename)
 
     return {"status": "success",
             "data": extracted_data}
