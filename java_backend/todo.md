@@ -1,0 +1,2 @@
+- fix dissapering images
+- python script reads invoces
