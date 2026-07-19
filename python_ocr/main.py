@@ -117,6 +117,8 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
 # - verify running containers
 # docker-compose logs -f
 # - logs of all containers
+# docker-compose down
+# - shutdown all containers
 
 # see pgadmin localhost:5432
 
