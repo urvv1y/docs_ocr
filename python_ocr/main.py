@@ -107,7 +107,18 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
             "data": extracted_data}
 
 # run FastApi server: uvicorn main:app --reload
+
+# -------
+# FOR DOCKER
 # docker-compose up -d --build
+# - builds
+# - run from the root of the project where docker-compose.yml is located
+# docker ps
+# - verify running containers
+# docker-compose logs -f
+# - logs of all containers
+
+# see pgadmin localhost:5432
 
 
 
