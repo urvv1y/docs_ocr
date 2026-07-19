@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: ocr_postgres
+    environment:
+      POSTGRES_DB: ocrdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: heslo123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  
+  ocr-python:
+    build: ./python-ocr 
+    container_name: ocr_python_service
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  
+  java-backend:
+    build: ./java-backend 
+    container_name: ocr_java_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - ocr-python
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ocrdb
+    restart: unless-stopped
+
+
+volumes:
+  pgdata:

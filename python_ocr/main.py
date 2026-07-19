@@ -107,6 +107,7 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
             "data": extracted_data}
 
 # run FastApi server: uvicorn main:app --reload
+# docker-compose up -d --build
 
 
 
