@@ -1,5 +1,5 @@
 # ********************************
-#  feature: OCR and Data Extraction from Images - receipts
+#  feature: OCR and Data Extraction from Images
 # ********************************
 
 # imports needed for the project
@@ -84,7 +84,6 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
         f.write(read_file)
 
     extracted_data = extract_data(file.filename, lang)
-
 
     return {"status": "success",
             "data": extracted_data}
