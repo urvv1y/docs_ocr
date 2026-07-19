@@ -18,17 +18,31 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 
 # constants
 SEARCH_PATTERNS_CZECH = {
+    # receipt
     "Provozovatel": r"Provozovatel:\s*(.+)",
     "Datum": r"Datum:\s*([0-9]{2}\.[0-9]{2}\.[0-9]{2}\s+[0-9]{2}:[0-9]{2})",
     "Platba": r"platby:\s*(.+)",
-    "Celkem": r"Cel.*?kem:\s*([0-9]+[\.,][0-9]{2})"
+    "Celkem": r"Cel.*?kem:\s*([0-9]+[\.,][0-9]{2})",
+
+    # invoice
+    "Cislo_faktury": r"(?i)(?:Číslo faktury|Faktura č\.|Variabilní symbol):\s*([0-9A-Za-z]+)",
+    "Datum_splatnosti": r"(?i)(?:Splatnost|Datum splatnosti):\s*([0-9]{1,2}\.[0-9]{1,2}\.[0-9]{2,4})",
+    "Odberatel": r"(?i)Odběratel:\s*(.+)",
+    "Banka": r"(?i)(?:Číslo účtu|Účet|IBAN):\s*([A-Za-z0-9/-]+)"
 }
 
 SEARCH_PATTERNS_ENGLISH = {
+    # receipt
     "Merchant": r"(?:Merchant|Vendor|Store):\s*(.+)",
     "Date": r"Date:\s*([0-9]{1,4}[-/\.][0-9]{1,2}[-/\.][0-9]{1,4}\s*(?:[0-9]{1,2}:[0-9]{2}(?:\s*[AaPp][Mm])?)?)",
     "Payment": r"(?:Payment|Method|Tender|Paid by):\s*(.+)",
-    "Total": r"Total.*?:\s*(?:[$£€]\s*|USD\s*|EUR\s*)?([0-9]+[\.,][0-9]{2})"
+    "Total": r"Total.*?:\s*(?:[$£€]\s*|USD\s*|EUR\s*)?([0-9]+[\.,][0-9]{2})",
+
+    # invoice
+    "Invoice_Number": r"(?i)Invoice No[.:]\s*([0-9A-Za-z]+)",
+    "Due_Date": r"(?i)Due Date:\s*([0-9]{1,4}[-/\.][0-9]{1,2}[-/\.][0-9]{1,4})",
+    "Customer": r"(?i)(?:Customer|Bill To):\s*(.+)",
+    "Bank": r"(?i)(?:Bank Account|IBAN|Account No):\s*([A-Za-z0-9/-]+)"
 }
 
 
