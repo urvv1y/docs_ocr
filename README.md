@@ -4,7 +4,7 @@
 - **PostgreSQL** database
 - entire project containerized with **Docker**
 
-# A project whose purpose was mainly to develop my skills in Java, SpringBoot, Docker, and database.
+### A project whose purpose was mainly to develop my skills in Java, SpringBoot, Docker, and database.
 
 ### Installation
 - Clone the repository
