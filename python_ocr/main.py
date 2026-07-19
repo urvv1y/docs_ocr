@@ -92,8 +92,6 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
 
     extracted_data = extract_data(file.filename, lang)
 
-    if os.path.exists(file.filename):
-        os.remove(file.filename)
 
     return {"status": "success",
             "data": extracted_data}
