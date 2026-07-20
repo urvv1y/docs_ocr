@@ -97,5 +97,5 @@ Retrieves a list of all processed receipts.
     *   **Port:** `5432`
     *   **Database:** `ocrdb`
     *   **Username:** `postgres`
-    *   **Password:** `heslo123`
+    *   **Password:** `pass123`
     *(Use clients like DBeaver, pgAdmin, or DataGrip to inspect the tables).*
