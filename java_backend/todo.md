@@ -1,4 +1,4 @@
 
-- opravit api do ai
+- fixnout goods integraci ai, ai halucinuje
 - pre processing obrazu pomoci opencv
 - frontend
