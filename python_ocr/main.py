@@ -3,12 +3,20 @@
 # ********************************
 
 # imports needed for the project
+import json
 import re
 import os
 from unittest import result
 import pytesseract
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
+from openai import OpenAI
+from dotenv import load_dotenv
+
+#
+load_dotenv()
+key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=key)
 
 # FastApi init
 app = FastAPI()
@@ -90,21 +98,48 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
             result["Goods"] = {}
     return result
 
+
+def ai_extract(doc_text: str, lang: str) -> dict:
+    """Function using AI to extract data from the document"""""
+    if lang == "ces":
+        prompt ="""
+        Jsi asistent pro extrakci dat z účtenek a faktur. Z následujícího textu z OCR extrahuj data do validního JSON formátu.
+        Očekávané klíče: "Provozovatel", "Datum", "Platba", "Celkem", "Cislo_faktury", "Datum_splatnosti", "Odberatel", "Banka", "Popis".
+        Dále vytvoř klíč "Zbozi". Jeho hodnotou bude objekt (mapa), kde klíčem je název zboží a hodnotou je objekt s detaily (např. "Mnozstvi", "Cena", "DPH").
+        Pokud nějaký údaj chybí, nastav ho na null. Hodnotu "Celkem" zformátuj pouze jako číslo (bez měny).
+        """
+    else:
+        prompt = """
+        You are a data extraction assistant. Extract data from the following OCR text of an invoice/receipt into a valid JSON.
+        Expected keys: "Merchant", "Date", "Payment", "Total", "Invoice_Number", "Due_Date", "Customer", "Bank", "Description".
+        Also create a key "Goods". Its value must be an object (map) where the key is the item name and the value is an object with details (e.g., "Quantity", "Price").
+        If a field is missing, set it to null. Format the "Total" value as a number only.
+        """
+    response = client.chat.completions.create(
+        model = "gpt-3.5-turbo-0125",
+        response_format={"type": "json_object"},
+        messages = [
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": doc_text}]
+    )
+    response_content = response.choices[0].message.content
+    extracted_json = json.loads(response_content)
+    return extracted_json
+
 # ***
 # FastAPI
 # ***
 @app.post("/extract")
 async def process(file: UploadFile = File(...), lang: str="ces"):
     read_file = await file.read()
-
+    file_path = file.filename
     with open(file.filename, "wb") as f:
         f.write(read_file)
 
-    extracted_data = extract_data(file.filename, lang)
-
-
+    extracted_data = load_image(file_path, lang)
+    ai_process_data = ai_extract(extracted_data, lang)
     return {"status": "success",
-            "data": extracted_data}
+            "data": ai_process_data}
 
 # run FastApi server: uvicorn main:app --reload
 
@@ -119,11 +154,20 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
 # - logs of all containers
 # docker-compose down
 # - shutdown all containers
+# docker-compose stop
+# - stops all containers
+# dockeer-compose up -d
+# - without the build
 
 # see pgadmin localhost:5432
 
+# POST
+# invoice http://localhost:8080/api/upload-invoice
+# receipt http://localhost:8080/api/upload
 
-
+# GET
+# invoices http://localhost:8080/api/invoices
+# receipts http://localhost:8080/api/receipts
 
 
 

@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: ocrdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: heslo123
+      POSTGRES_PASSWORD: pass123
     ports:
       - "5432:5432"
     volumes:
@@ -17,9 +17,11 @@ services:
   
   ocr-python:
     build: ./python_ocr 
-    container_name: ocr_python_service
+    container_name: ocr-python
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     restart: unless-stopped
 
   
