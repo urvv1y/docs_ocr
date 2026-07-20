@@ -1,4 +1,4 @@
-
+- dokaze ai spravne cist ces a eng???
 - fixnout goods integraci ai, ai halucinuje
 - pre processing obrazu pomoci opencv
 - frontend
