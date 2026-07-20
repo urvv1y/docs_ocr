@@ -116,7 +116,7 @@ def ai_extract(doc_text: str, lang: str) -> dict:
         If a field is missing, set it to null. Format the "Total" value as a number only.
         """
     response = client.chat.completions.create(
-        model = "llama3",
+        model = "qwen2.5:1.5b",
         response_format={"type": "json_object"},
         messages = [
             {"role": "system", "content": prompt},
