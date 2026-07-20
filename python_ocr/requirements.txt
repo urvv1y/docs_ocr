@@ -5,3 +5,5 @@ fastapi
 uvicorn
 Pillow
 python-multipart
+openai
+python-dotenv
