@@ -37,14 +37,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ocrdb
     restart: unless-stopped
 
-    ollama:
-      image: ollama/ollama
-      container_name: ocr_ollama
-      ports:
-        - "11434:11434"
-      volumes:
-        - ollama_data:/root/.ollama
-      restart: unless-stopped
+  ollama:
+    image: ollama/ollama
+    container_name: ocr_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
 
 
 volumes:
