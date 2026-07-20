@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 #
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=key)
+client = OpenAI(base_url="http://ollama:11434/v1", api_key="ollama")
 
 # FastApi init
 app = FastAPI()
@@ -116,7 +116,7 @@ def ai_extract(doc_text: str, lang: str) -> dict:
         If a field is missing, set it to null. Format the "Total" value as a number only.
         """
     response = client.chat.completions.create(
-        model = "gpt-3.5-turbo-0125",
+        model = "llama3",
         response_format={"type": "json_object"},
         messages = [
             {"role": "system", "content": prompt},
