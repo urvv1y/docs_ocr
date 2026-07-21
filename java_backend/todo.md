@@ -1,4 +1,3 @@
-- dokaze ai spravne cist ces a eng???
-- fixnout goods integraci ai, ai halucinuje
+- zmenit ai na qroq, zmenit docker composeyaml
 - pre processing obrazu pomoci opencv
 - frontend
