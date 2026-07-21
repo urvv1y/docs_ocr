@@ -15,8 +15,8 @@ from dotenv import load_dotenv
 
 #
 load_dotenv()
-key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(base_url="http://ollama:11434/v1", api_key="ollama")
+key = os.getenv("GROQ_API_KEY")
+client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=key)
 
 # FastApi init
 app = FastAPI()
@@ -155,7 +155,7 @@ def ai_extract(doc_text: str, lang: str) -> dict:
         If no goods are found in the text, return an empty object for Goods like this: "Goods": {}.
         """
     response = client.chat.completions.create(
-        model = "qwen2.5:1.5b",
+        model = "llama-3.1-8b-instant",
         response_format={"type": "json_object"},
         messages = [
             {"role": "system", "content": prompt},
