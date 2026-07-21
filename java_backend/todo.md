@@ -1,3 +1,3 @@
-- zmenit ai na qroq, zmenit docker composeyaml
+- moznost mazani z databaze
 - pre processing obrazu pomoci opencv
 - frontend
