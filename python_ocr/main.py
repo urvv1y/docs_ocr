@@ -100,9 +100,9 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
 
 
 def ai_extract(doc_text: str, lang: str) -> dict:
-    """Function using AI to extract data from the document"""""
+    """Function using AI to extract data from the document"""
     if lang == "ces":
-        """
+        prompt = """
         You are a strict data extraction assistant. Extract data from the provided Czech OCR text into a valid JSON object.
         Do not make up any data. If a piece of information is missing, set its value to null.
         Format the "Celkem" value strictly as a number without currency symbols (e.g., "150.50").
