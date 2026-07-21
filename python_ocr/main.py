@@ -100,27 +100,67 @@ def extract_data(img_path: str,lang: str) -> dict[str, str | None]:
 
 
 def ai_extract(doc_text: str, lang: str) -> dict:
-    """Function using AI to extract data from the document"""""
+    """Function using AI to extract data from the document"""
     if lang == "ces":
-        prompt ="""
-        Jsi asistent pro extrakci dat z účtenek a faktur. Z následujícího textu z OCR extrahuj data do validního JSON formátu.
-        Očekávané klíče: "Provozovatel", "Datum", "Platba", "Celkem", "Cislo_faktury", "Datum_splatnosti", "Odberatel", "Banka", "Popis".
-        Dále vytvoř klíč "Zbozi". Jeho hodnotou bude objekt (mapa), kde klíčem je název zboží a hodnotou je objekt s detaily (např. "Mnozstvi", "Cena", "DPH").
-        Pokud nějaký údaj chybí, nastav ho na null. Hodnotu "Celkem" zformátuj pouze jako číslo (bez měny).
+        prompt = """
+        You are a strict data extraction assistant. Extract data from the provided Czech OCR text into a valid JSON object.
+        Do not make up any data. If a piece of information is missing, set its value to null.
+        Format the "Celkem" value strictly as a number without currency symbols (e.g., "150.50").
+        
+        You must return EXACTLY this JSON structure, replacing the examples with actual extracted data:
+        {
+            "Provozovatel": "string or null",
+            "Datum": "string or null",
+            "Platba": "string or null",
+            "Celkem": "number or null",
+            "Cislo_faktury": "string or null",
+            "Datum_splatnosti": "string or null",
+            "Odberatel": "string or null",
+            "Banka": "string or null",
+            "Popis": "string or null",
+            "Zbozi": {
+                "Název prvního produktu": {
+                    "Mnozstvi": "string or null",
+                    "Cena": "string or null",
+                    "DPH": "string or null"
+                }
+            }
+        }
+        If no goods are found in the text, return an empty object for Zbozi like this: "Zbozi": {}.
         """
     else:
         prompt = """
-        You are a data extraction assistant. Extract data from the following OCR text of an invoice/receipt into a valid JSON.
-        Expected keys: "Merchant", "Date", "Payment", "Total", "Invoice_Number", "Due_Date", "Customer", "Bank", "Description".
-        Also create a key "Goods". Its value must be an object (map) where the key is the item name and the value is an object with details (e.g., "Quantity", "Price").
-        If a field is missing, set it to null. Format the "Total" value as a number only.
+        You are a strict data extraction assistant. Extract data from the provided English OCR text into a valid JSON object.
+        Do not make up any data. If a piece of information is missing, set its value to null.
+        Format the "Total" value strictly as a number without currency symbols (e.g., "150.50").
+        
+        You must return EXACTLY this JSON structure, replacing the examples with actual extracted data:
+        {
+            "Merchant": "string or null",
+            "Date": "string or null",
+            "Payment": "string or null",
+            "Total": "number or null",
+            "Invoice_Number": "string or null",
+            "Due_Date": "string or null",
+            "Customer": "string or null",
+            "Bank": "string or null",
+            "Description": "string or null",
+            "Goods": {
+                "Name of the first item": {
+                    "Quantity": "string or null",
+                    "Price": "string or null"
+                }
+            }
+        }
+        If no goods are found in the text, return an empty object for Goods like this: "Goods": {}.
         """
     response = client.chat.completions.create(
         model = "qwen2.5:1.5b",
         response_format={"type": "json_object"},
         messages = [
             {"role": "system", "content": prompt},
-            {"role": "user", "content": doc_text}]
+            {"role": "user", "content": doc_text}],
+            temperature=0.1
     )
     response_content = response.choices[0].message.content
     extracted_json = json.loads(response_content)
