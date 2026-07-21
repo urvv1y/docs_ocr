@@ -160,7 +160,7 @@ def ai_extract(doc_text: str, lang: str) -> dict:
         messages = [
             {"role": "system", "content": prompt},
             {"role": "user", "content": doc_text}],
-            temperature=0.1;
+            temperature=0.1
     )
     response_content = response.choices[0].message.content
     extracted_json = json.loads(response_content)
