@@ -5,15 +5,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.HashMap;
 import java.util.List;
@@ -147,4 +143,15 @@ public class OrcControll {
         invoices.sort(new DocumentComparatorID());
         return ResponseEntity.ok(invoices);
     }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<String> clearDatabase() {
+        try {
+            receiptRepository.deleteAll(); invoiceRepository.deleteAll();
+            return ResponseEntity.ok("Database cleared");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+    // postman - DELETE || curl -X DELETE http://localhost:8080/api/clear
 }
