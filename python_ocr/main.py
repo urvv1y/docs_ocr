@@ -176,7 +176,8 @@ async def process(file: UploadFile = File(...), lang: str="ces", doc_type: str="
 
     extracted_data = load_image(file_path, lang)
     ai_process_data = ai_extract(extracted_data, lang, doc_type)
-
+    qr_data = extract_qr_code(file_path)
+    ai_process_data["qr_codes"] = qr_data
     # uncomment IF you want to delete the uploaded file after processing
     #if os.path.exists(file_path):
     #    os.remove(file_path)
