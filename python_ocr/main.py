@@ -11,6 +11,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import cv2
 import numpy as np
+from pyzbar.pyzbar import decode
 
 #
 load_dotenv()
@@ -34,6 +35,15 @@ def load_image(img_path: str, lang: str) -> str:
     _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     image_text = pytesseract.image_to_string(thresh, lang=lang, config='--psm 4')
     return image_text
+
+def extract_qr_code(img_path: str) -> list:
+    """Function to extract QR code data from an image"""
+    img = cv2.imread(img_path)
+    if img is None:
+        raise ValueError(f"Image at path {img_path} could not be loaded.")
+    qr_codes = decode(img)
+    qr_data_list = [qr.data.decode('utf-8') for qr in qr_codes]
+    return qr_data_list
 
 
 def ai_extract(doc_text: str, lang: str, doc_type: str) -> dict:
