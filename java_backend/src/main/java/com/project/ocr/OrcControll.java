@@ -61,9 +61,11 @@ public class OrcControll {
             if (store == null || store.equals("null") || store.isEmpty()) {
                 store = "UNKNOWN STORE";
             }
-            if (!isValidNumber(total)) {
-                total = "0.0 (error)";
+            String cleanedTotal = isValidNumber(total);
+            if (cleanedTotal == null) {
+                return ResponseEntity.badRequest().body("validation failed" + total);
             }
+            total = cleanedTotal;
 
             Receipt receipt = new Receipt(store, date, payment, total);
             receiptRepository.save(receipt);
@@ -104,9 +106,11 @@ public class OrcControll {
             String bank = dataNode.hasNonNull("Banka") ? dataNode.get("Banka").asString() : dataNode.path("Bank").asString(null);
             String description = dataNode.hasNonNull("Popis") ? dataNode.get("Popis").asString() : dataNode.path("Description").asString(null);
 
-            if (!isValidNumber(totalPrice)) {
-                return ResponseEntity.badRequest().body("Validation failed on total price: " + totalPrice);
+            String cleanedTotal = isValidNumber(totalPrice);
+            if (cleanedTotal == null) {
+                return ResponseEntity.badRequest().body("validation failed" + totalPrice);
             }
+            totalPrice = cleanedTotal;
 
             Map<String, Map<String, String>> goodsMap = new HashMap<>();
             JsonNode goodsNode = dataNode.hasNonNull("Zbozi") ? dataNode.get("Zbozi") : dataNode.path("Goods");
@@ -171,15 +175,17 @@ public class OrcControll {
     }
     // postman - DELETE || curl -X DELETE http://localhost:8080/api/clear
 
-    private boolean isValidNumber(String numberString) {
-        if (numberString == null || numberString.isEmpty() || numberString.equalsIgnoreCase("null")) {
-            return false;
+    private String isValidNumber(String numberString) {
+        if (numberString == null || numberString.trim().isEmpty() || numberString.equalsIgnoreCase("null")) {
+            return null;
         }
+        String sanitized = numberString.replaceAll("[^0-9.,]", "");
+        sanitized = sanitized.replace(",", ".");
         try {
-            Double.parseDouble(numberString.replace(",", "."));
-            return true;
+            Double.parseDouble(sanitized);
+            return sanitized;
         } catch (NumberFormatException e) {
-            return false;
+            return null;
         }
 
     }
