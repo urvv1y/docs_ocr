@@ -7,3 +7,5 @@ Pillow
 python-multipart
 openai
 python-dotenv
+opencv-python-headless
+numpy
