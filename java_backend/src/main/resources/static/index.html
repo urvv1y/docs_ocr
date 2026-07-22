@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR - Document Extraction</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7f9fc; margin: 0; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #2c3e50; }
+        .container { display: flex; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex: 1 1 300px; }
+        .full-width { flex: 1 1 100%; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        select, input[type="file"] { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 10px; transition: 0.3s; }
+        button:hover { background-color: #2980b9; }
+        .btn-danger { background-color: #e74c3c; }
+        .btn-danger:hover { background-color: #c0392b; }
+        .btn-success { background-color: #2ecc71; }
+        .btn-success:hover { background-color: #27ae60; }
+        pre { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; min-height: 100px; }
+        .loader { display: none; text-align: center; font-weight: bold; color: #3498db; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>OCR - Document Extraction</h1>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Upload Document</h2>
+        <form id="uploadForm">
+            <label for="docType">Document type:</label>
+            <select id="docType">
+                <option value="receipt">Receipt</option>
+                <option value="invoice">Invoice</option>
+            </select>
+
+            <label for="lang">Language:</label>
+            <select id="lang">
+                <option value="ces">Czech</option>
+                <option value="eng">English</option>
+            </select>
+
+            <label for="file">File:</label>
+            <input type="file" id="file" accept="image/*" required>
+
+            <button type="submit" class="btn-success">Process</button>
+            <div id="loader" class="loader">Document is being processed</div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Database</h2>
+        <button onclick="fetchData('receipts')">Load receipts</button>
+        <button onclick="fetchData('invoices')">Load invoices</button>
+        <hr style="border-top: 1px solid #eee; margin: 15px 0;">
+        <button onclick="clearDatabase()" class="btn-danger">Clear the database</button>
+    </div>
+
+    <div class="card full-width">
+        <h2>Response</h2>
+        <pre id="resultArea">Empty</pre>
+    </div>
+</div>
+
+<script>
+    const baseUrl = '/api';
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fileInput = document.getElementById('file');
+        const docType = document.getElementById('docType').value;
+        const lang = document.getElementById('lang').value;
+        const resultArea = document.getElementById('resultArea');
+        const loader = document.getElementById('loader');
+
+        if (fileInput.files.length === 0) return alert("Choose the file!");
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('lang', lang);
+
+        const endpoint = docType === 'invoice' ? '/upload-invoice' : '/upload';
+
+        loader.style.display = 'block';
+        resultArea.textContent = "Sending request";
+
+        try {
+            const response = await fetch(`${baseUrl}${endpoint}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const text = await response.text();
+            resultArea.textContent = `Status code: ${response.status}\nResponse: ${text}`;
+        } catch (error) {
+            resultArea.textContent = `Error: ${error.message}`;
+        } finally {
+            loader.style.display = 'none';
+        }
+    });
+
+    async function fetchData(type) {
+        const resultArea = document.getElementById('resultArea');
+        resultArea.textContent = "Loading the data";
+        try {
+            const response = await fetch(`${baseUrl}/${type}`);
+            const data = await response.json();
+            resultArea.textContent = JSON.stringify(data, null, 4);
+        } catch (error) {
+            resultArea.textContent = `Error: ${error.message}`;
+        }
+    }
+
+
+    async function clearDatabase() {
+        if (!confirm("This will cause the database will be cleared")) return;
+
+        const resultArea = document.getElementById('resultArea');
+        resultArea.textContent = "Deleting the data";
+        try {
+            const response = await fetch(`${baseUrl}/clear`, { method: 'DELETE' });
+            const text = await response.text();
+            resultArea.textContent = `Status code: ${response.status}\nResponse: ${text}`;
+        } catch (error) {
+            resultArea.textContent = `Error: ${error.message}`;
+        }
+    }
+</script>
+</body>
+</html>
