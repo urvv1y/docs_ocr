@@ -58,6 +58,13 @@ public class OrcControll {
             String payment = dataNode.hasNonNull("Platba")? dataNode.get("Platba").asString() : dataNode.path("Payment").asString(null);
             String total = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asString() : dataNode.path("Total").asString(null);
 
+            if (store == null || store.equals("null") || store.isEmpty()) {
+                store = "UNKNOWN STORE";
+            }
+            if (!isValidNumber(total)) {
+                total = "0.0 (error)";
+            }
+
             Receipt receipt = new Receipt(store, date, payment, total);
             receiptRepository.save(receipt);
 
@@ -96,6 +103,10 @@ public class OrcControll {
             String customer = dataNode.hasNonNull("Odberatel") ? dataNode.get("Odberatel").asString() : dataNode.path("Customer").asString(null);
             String bank = dataNode.hasNonNull("Banka") ? dataNode.get("Banka").asString() : dataNode.path("Bank").asString(null);
             String description = dataNode.hasNonNull("Popis") ? dataNode.get("Popis").asString() : dataNode.path("Description").asString(null);
+
+            if (!isValidNumber(totalPrice)) {
+                return ResponseEntity.badRequest().body("Validation failed on total price: " + totalPrice);
+            }
 
             Map<String, Map<String, String>> goodsMap = new HashMap<>();
             JsonNode goodsNode = dataNode.hasNonNull("Zbozi") ? dataNode.get("Zbozi") : dataNode.path("Goods");
@@ -159,4 +170,17 @@ public class OrcControll {
         }
     }
     // postman - DELETE || curl -X DELETE http://localhost:8080/api/clear
+
+    private boolean isValidNumber(String numberString) {
+        if (numberString == null || numberString.isEmpty() || numberString.equalsIgnoreCase("null")) {
+            return false;
+        }
+        try {
+            Double.parseDouble(numberString.replace(",", "."));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+    }
 }
