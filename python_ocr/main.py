@@ -151,5 +151,8 @@ async def process(file: UploadFile = File(...), lang: str="ces"):
 # invoices http://localhost:8080/api/invoices
 # receipts http://localhost:8080/api/receipts
 
+# UI
+# http://localhost:8080 
+
 
 
