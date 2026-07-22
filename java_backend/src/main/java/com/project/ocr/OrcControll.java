@@ -63,7 +63,8 @@ public class OrcControll {
             }
             String cleanedTotal = isValidNumber(total);
             if (cleanedTotal == null) {
-                return ResponseEntity.badRequest().body("validation failed" + total);
+                return ResponseEntity.accepted().body("Double check the values! " + total);
+                // return ResponseEntity.badRequest().body("validation failed" + total);
             }
             total = cleanedTotal;
 
@@ -108,7 +109,7 @@ public class OrcControll {
 
             String cleanedTotal = isValidNumber(totalPrice);
             if (cleanedTotal == null) {
-                return ResponseEntity.badRequest().body("validation failed" + totalPrice);
+                return ResponseEntity.accepted().body("Double check the values! " + totalPrice);
             }
             totalPrice = cleanedTotal;
 
