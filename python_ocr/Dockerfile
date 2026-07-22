@@ -5,13 +5,14 @@ RUN apt-get update && apt-get install -y \
     tesseract-ocr-ces \
     tesseract-ocr-eng \
     libgl1 \
+    libzbar0 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-ces tesseract-ocr-eng
+
 
 COPY main.py .
 
