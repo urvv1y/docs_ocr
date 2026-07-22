@@ -56,7 +56,7 @@ public class OrcControll {
             String store = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asString() : dataNode.path("Merchant").asString(null);
             String date = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asString() : dataNode.path("Date").asString(null);
             String payment = dataNode.hasNonNull("Platba")? dataNode.get("Platba").asString() : dataNode.path("Payment").asString(null);
-            String total = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asString() : dataNode.path("Total").asString(null);
+            String total = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asText() : dataNode.path("Total").asText(null);
 
             if (store == null || store.equals("null") || store.isEmpty()) {
                 store = "UNKNOWN STORE";
@@ -99,7 +99,7 @@ public class OrcControll {
             String seller = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asString() : dataNode.path("Merchant").asString(null);
             String invoiceDate = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asString() : dataNode.path("Date").asString(null);
             String paymentMethod = dataNode.hasNonNull("Platba") ? dataNode.get("Platba").asString() : dataNode.path("Payment").asString(null);
-            String totalPrice = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asString() : dataNode.path("Total").asString(null);
+            String totalPrice = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asText() : dataNode.path("Total").asText(null);
             String invoiceNumber = dataNode.hasNonNull("Cislo_faktury") ? dataNode.get("Cislo_faktury").asString() : dataNode.path("Invoice_Number").asString(null);
             String dueDate = dataNode.hasNonNull("Datum_splatnosti") ? dataNode.get("Datum_splatnosti").asString() : dataNode.path("Due_Date").asString(null);
             String customer = dataNode.hasNonNull("Odberatel") ? dataNode.get("Odberatel").asString() : dataNode.path("Customer").asString(null);
@@ -180,13 +180,24 @@ public class OrcControll {
             return null;
         }
         String sanitized = numberString.replaceAll("[^0-9.,]", "");
-        sanitized = sanitized.replace(",", ".");
+        if (sanitized.isEmpty()) {
+            return null;
+        }
+
+        int lastDot = sanitized.lastIndexOf('.');
+        int lastComma = sanitized.lastIndexOf(',');
+        int decimalIndex = Math.max(lastDot, lastComma);
+
+        if (decimalIndex != -1) {
+            String wholePart = sanitized.substring(0, decimalIndex).replaceAll("[.,]", "");
+            String decimalPart = sanitized.substring(decimalIndex + 1).replaceAll("[.,]", "");
+            sanitized = wholePart + "." + decimalPart;
+        }
+
         try {
             Double.parseDouble(sanitized);
             return sanitized;
         } catch (NumberFormatException e) {
             return null;
         }
-
-    }
-}
+}}
