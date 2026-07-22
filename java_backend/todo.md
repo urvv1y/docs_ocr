@@ -1,3 +1,2 @@
-
-- pre processing obrazu pomoci opencv
 - frontend
+- vylepsit frontend (vlastni navrh???)
