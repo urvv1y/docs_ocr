@@ -105,13 +105,61 @@
 
     async function fetchData(type) {
         const resultArea = document.getElementById('resultArea');
-        resultArea.textContent = "Loading the data";
+        resultArea.innerHTML = "<div class='loader' style='display:block'>Loading data</div>";
+
         try {
             const response = await fetch(`${baseUrl}/${type}`);
             const data = await response.json();
-            resultArea.textContent = JSON.stringify(data, null, 4);
+
+            if (data.length === 0) {
+                resultArea.innerHTML = "<p>Database is empty</p>";
+                return;
+            }
+
+            let html = "<div style='display:flex; flex-direction:column; gap:15px;'>";
+
+            data.forEach(item => {
+                html += `<div style="background: #ecf0f1; padding: 15px; border-radius: 5px; color: #2c3e50;">`;
+                html += `<h3 style="margin-top:0;">ID: ${item.id} - ${type === 'receipts' ? 'Receipt' : 'Invoice'}</h3>`;
+
+
+                html += `<table style="width:100%; border-collapse: collapse;">`;
+                for (const [key, value] of Object.entries(item)) {
+
+                    if (key !== 'goods' && key !== 'id') {
+                        html += `<tr style="border-bottom: 1px solid #bdc3c7;">
+                                    <td style="padding: 5px; font-weight: bold;">${key}:</td>
+                                    <td style="padding: 5px;">${value === null ? '-' : value}</td>
+                                 </tr>`;
+                    }
+                }
+                html += `</table>`;
+
+                if (item.goods && Object.keys(item.goods).length > 0) {
+                    html += `<h4 style="margin-bottom: 5px;">Items:</h4>`;
+                    html += `<ul style="margin-top: 0; padding-left: 20px;">`;
+                    for (const [itemName, itemDetails] of Object.entries(item.goods)) {
+                        html += `<li><strong>${itemName}</strong>`;
+                        if (itemDetails && typeof itemDetails === 'object') {
+                            html += ` (`;
+                            for (const [detKey, detVal] of Object.entries(itemDetails)) {
+                                html += `${detKey}: ${detVal}, `;
+                            }
+                            html = html.slice(0, -2) + `)`;
+                        }
+                        html += `</li>`;
+                    }
+                    html += `</ul>`;
+                }
+
+                html += `</div>`;
+            });
+
+            html += "</div>";
+            resultArea.innerHTML = html;
+
         } catch (error) {
-            resultArea.textContent = `Error: ${error.message}`;
+            resultArea.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
         }
     }
 
