@@ -42,7 +42,10 @@ public class OrcControll {
             body.add("lang", lang);
 
             String response = restClient.post()
-                    .uri("/extract")
+                    .uri(uriBuilder -> uriBuilder.path("/extract")
+                            .queryParam("lang", lang)
+                            .queryParam("doc_type", "receipt")
+                            .build())
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(body)
                     .retrieve()
@@ -73,7 +76,9 @@ public class OrcControll {
             body.add("lang", lang);
 
             String response = restClient.post()
-                    .uri(uriBuilder -> uriBuilder.path("/extract").queryParam("lang", lang).build())
+                    .uri(uriBuilder -> uriBuilder.path("/extract").queryParam("lang", lang)
+                            .queryParam("doc_type", "invoice")
+                            .build())
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(body)
                     .retrieve()
