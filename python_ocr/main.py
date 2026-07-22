@@ -12,6 +12,8 @@ from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 from openai import OpenAI
 from dotenv import load_dotenv
+import cv2
+import numpy as np
 
 #
 load_dotenv()
@@ -65,8 +67,13 @@ def amount_cleaner(amount: str) -> str:
 
 """ Function to load and extract text from an image """
 def load_image(img_path: str, lang: str) -> str:
-    opened_image = Image.open(img_path).convert("L")
-    image_text = pytesseract.image_to_string(opened_image, lang=lang, config='--psm 4')
+    img = cv2.imread(img_path)
+    if img is None:
+        raise ValueError(f"Image at path {img_path} could not be loaded.")
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    image_text = pytesseract.image_to_string(thresh, lang=lang, config='--psm 4')
     return image_text
 
 

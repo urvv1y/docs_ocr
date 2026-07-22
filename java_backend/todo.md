@@ -1,3 +1,3 @@
-- moznost mazani z databaze
+
 - pre processing obrazu pomoci opencv
 - frontend
