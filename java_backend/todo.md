@@ -1,2 +1,3 @@
-- frontend
-- vylepsit frontend (vlastni navrh???)
+- overeni pres qr kod
+- lepsi format dat na vystup nez JSON (qr kod, po nacteni json??)
+- validace vystupu
