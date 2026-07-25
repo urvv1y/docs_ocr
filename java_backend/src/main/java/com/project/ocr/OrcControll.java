@@ -35,7 +35,7 @@ public class OrcControll {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,  @RequestParam(value = "lang", defaultValue = "ces") String lang) {
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file,  @RequestParam(value = "lang", defaultValue = "ces") String lang) {
         try {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("file", file.getResource());
@@ -71,7 +71,8 @@ public class OrcControll {
             Receipt receipt = new Receipt(store, date, payment, total);
             receiptRepository.save(receipt);
 
-            return ResponseEntity.ok("Document read successfully - doc_id: " + receipt.getId());
+
+            return ResponseEntity.ok("Document read successfully - doc_id: " + receipt);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
@@ -79,7 +80,7 @@ public class OrcControll {
     }
 
     @PostMapping("/upload-invoice")
-    public ResponseEntity<String> uploadInvoiceImage(@RequestParam("file") MultipartFile file, @RequestParam(value = "lang", defaultValue = "ces") String lang) {
+    public ResponseEntity<?> uploadInvoiceImage(@RequestParam("file") MultipartFile file, @RequestParam(value = "lang", defaultValue = "ces") String lang) {
         try {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("file", file.getResource());
@@ -144,7 +145,7 @@ public class OrcControll {
             invoice.setGoods(goodsMap);
 
             invoiceRepository.save(invoice);
-            return ResponseEntity.ok("Invoice saved " + invoice.getId());
+            return ResponseEntity.ok("Invoice saved " + invoice);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
