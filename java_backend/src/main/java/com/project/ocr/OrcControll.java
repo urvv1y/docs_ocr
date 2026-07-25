@@ -72,7 +72,7 @@ public class OrcControll {
             receiptRepository.save(receipt);
 
 
-            return ResponseEntity.ok("Document read successfully - doc_id: " + receipt);
+            return ResponseEntity.ok(receipt);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
@@ -145,7 +145,7 @@ public class OrcControll {
             invoice.setGoods(goodsMap);
 
             invoiceRepository.save(invoice);
-            return ResponseEntity.ok("Invoice saved " + invoice);
+            return ResponseEntity.ok(invoice);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

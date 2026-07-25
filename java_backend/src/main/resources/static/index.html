@@ -116,7 +116,7 @@
             const text = await response.text();
             let jsonResponse;
 
-            
+
             try {
                 jsonResponse = JSON.parse(text);
                 resultArea.textContent = JSON.stringify(jsonResponse, null, 2);
