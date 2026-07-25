@@ -53,9 +53,9 @@ public class OrcControll {
             JsonNode root = objectMapper.readTree(response);
             JsonNode dataNode = root.path("data");
 
-            String store = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asString() : dataNode.path("Merchant").asString(null);
-            String date = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asString() : dataNode.path("Date").asString(null);
-            String payment = dataNode.hasNonNull("Platba")? dataNode.get("Platba").asString() : dataNode.path("Payment").asString(null);
+            String store = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asText() : dataNode.path("Merchant").asText(null);
+            String date = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asText() : dataNode.path("Date").asText(null);
+            String payment = dataNode.hasNonNull("Platba")? dataNode.get("Platba").asText() : dataNode.path("Payment").asText(null);
             String total = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asText() : dataNode.path("Total").asText(null);
 
             if (store == null || store.equals("null") || store.isEmpty()) {
@@ -97,15 +97,15 @@ public class OrcControll {
             JsonNode dataNode = root.path("data");
 
 
-            String seller = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asString() : dataNode.path("Merchant").asString(null);
-            String invoiceDate = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asString() : dataNode.path("Date").asString(null);
-            String paymentMethod = dataNode.hasNonNull("Platba") ? dataNode.get("Platba").asString() : dataNode.path("Payment").asString(null);
+            String seller = dataNode.hasNonNull("Provozovatel") ? dataNode.get("Provozovatel").asText() : dataNode.path("Merchant").asText(null);
+            String invoiceDate = dataNode.hasNonNull("Datum") ? dataNode.get("Datum").asText() : dataNode.path("Date").asText(null);
+            String paymentMethod = dataNode.hasNonNull("Platba") ? dataNode.get("Platba").asText() : dataNode.path("Payment").asText(null);
             String totalPrice = dataNode.hasNonNull("Celkem") ? dataNode.get("Celkem").asText() : dataNode.path("Total").asText(null);
-            String invoiceNumber = dataNode.hasNonNull("Cislo_faktury") ? dataNode.get("Cislo_faktury").asString() : dataNode.path("Invoice_Number").asString(null);
-            String dueDate = dataNode.hasNonNull("Datum_splatnosti") ? dataNode.get("Datum_splatnosti").asString() : dataNode.path("Due_Date").asString(null);
-            String customer = dataNode.hasNonNull("Odberatel") ? dataNode.get("Odberatel").asString() : dataNode.path("Customer").asString(null);
-            String bank = dataNode.hasNonNull("Banka") ? dataNode.get("Banka").asString() : dataNode.path("Bank").asString(null);
-            String description = dataNode.hasNonNull("Popis") ? dataNode.get("Popis").asString() : dataNode.path("Description").asString(null);
+            String invoiceNumber = dataNode.hasNonNull("Cislo_faktury") ? dataNode.get("Cislo_faktury").asText() : dataNode.path("Invoice_Number").asText(null);
+            String dueDate = dataNode.hasNonNull("Datum_splatnosti") ? dataNode.get("Datum_splatnosti").asText() : dataNode.path("Due_Date").asText(null);
+            String customer = dataNode.hasNonNull("Odberatel") ? dataNode.get("Odberatel").asText() : dataNode.path("Customer").asText(null);
+            String bank = dataNode.hasNonNull("Banka") ? dataNode.get("Banka").asText() : dataNode.path("Bank").asText(null);
+            String description = dataNode.hasNonNull("Popis") ? dataNode.get("Popis").asText() : dataNode.path("Description").asText(null);
 
             String cleanedTotal = isValidNumber(totalPrice);
             if (cleanedTotal == null) {
