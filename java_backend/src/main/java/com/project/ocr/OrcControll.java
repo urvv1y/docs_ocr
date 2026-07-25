@@ -166,6 +166,20 @@ public class OrcControll {
         return ResponseEntity.ok(invoices);
     }
 
+    @GetMapping("/receipts/{id}")
+    public ResponseEntity<?> getReceiptById(@PathVariable Long id) {
+        return receiptRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/invoices/{id}")
+    public ResponseEntity<?> getInvoiceById(@PathVariable Long id) {
+        return invoiceRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/clear")
     public ResponseEntity<String> clearDatabase() {
         try {
@@ -202,4 +216,6 @@ public class OrcControll {
         } catch (NumberFormatException e) {
             return null;
         }
+
+
 }}

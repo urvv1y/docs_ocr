@@ -62,7 +62,7 @@
     </div>
 
     <div class="card full-width">
-        <h2>Generated QR code with JSON data</h2>
+        <h2>Generated QR code with URL</h2>
         <div id="qrcode"></div>
         <h3 style="margin-top: 30px;">Result data / Response</h3>
         <pre id="resultArea">Empty</pre>
@@ -107,7 +107,6 @@
         resultArea.textContent = "Sending request";
         qrcodeContainer.innerHTML = "";
 
-
        try {
             const response = await fetch(`${baseUrl}${endpoint}`, {
                 method: 'POST',
@@ -117,23 +116,26 @@
             const text = await response.text();
             let jsonResponse;
 
+            
             try {
                 jsonResponse = JSON.parse(text);
-
                 resultArea.textContent = JSON.stringify(jsonResponse, null, 2);
             } catch (jsonError) {
-
                 resultArea.textContent = `Status code: ${response.status}\nResponse: ${text}`;
                 qrcodeContainer.innerHTML = "<p style='color:red;'>Non-valid JSON.</p>";
                 loader.style.display = 'none';
-                return; 
+                return;
             }
 
-
             try {
-                const compactJsonString = JSON.stringify(jsonResponse);
+                const documentId = jsonResponse.id;
+                const docPath = docType === 'invoice' ? 'invoices' : 'receipts';
+
+
+                const documentUrl = `${window.location.protocol}//${window.location.host}${baseUrl}/${docPath}/${documentId}`;
+
                 new QRCode(qrcodeContainer, {
-                    text: compactJsonString,
+                    text: documentUrl,
                     width: 256,
                     height: 256,
                     colorDark : "#000000",
@@ -141,7 +143,6 @@
                     correctLevel : QRCode.CorrectLevel.L
                 });
             } catch (qrError) {
-
                 qrcodeContainer.innerHTML = `<p style='color:red;'>Unable to generate the QR Code.</p>`;
             }
 
@@ -150,6 +151,7 @@
         } finally {
             loader.style.display = 'none';
         }
+    });
 
     async function fetchData(type) {
         const resultArea = document.getElementById('resultArea');
@@ -169,7 +171,6 @@
             data.forEach(item => {
                 html += `<div style="background: #ecf0f1; padding: 15px; border-radius: 5px; color: #2c3e50;">`;
                 html += `<h3 style="margin-top:0;">ID: ${item.id} - ${type === 'receipts' ? 'Receipt' : 'Invoice'}</h3>`;
-
 
                 html += `<table style="width:100%; border-collapse: collapse;">`;
                 for (const [key, value] of Object.entries(item)) {
@@ -210,7 +211,6 @@
             resultArea.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
         }
     }
-
 
     async function clearDatabase() {
         if (!confirm("This will cause the database will be cleared")) return;
