@@ -10,4 +10,3 @@ python-dotenv
 opencv-python-headless
 numpy
 pytest
-pyzbar
