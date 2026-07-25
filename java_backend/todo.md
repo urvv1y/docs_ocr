@@ -1,4 +1,1 @@
-
-- fixnout zobrazeni na vystup u invoices
-- lepsi format dat na vystup nez JSON (qr kod, po nacteni json??)
-- validace vystupu
+- fixnout QR
