@@ -60,7 +60,7 @@
         <hr style="border-top: 1px solid #eee; margin: 15px 0;">
         <button onclick="clearDatabase()" class="btn-danger">Clear the database</button>
     </div>
-    
+
     <div class="card full-width">
         <h2>Generated QR code with JSON data</h2>
         <div id="qrcode"></div>
@@ -108,17 +108,29 @@
         qrcodeContainer.innerHTML = "";
 
 
-        try {
+       try {
             const response = await fetch(`${baseUrl}${endpoint}`, {
                 method: 'POST',
                 body: formData
             });
 
             const text = await response.text();
+            let jsonResponse;
 
             try {
-                const jsonResponse = JSON.parse(text);
+                jsonResponse = JSON.parse(text);
+
                 resultArea.textContent = JSON.stringify(jsonResponse, null, 2);
+            } catch (jsonError) {
+
+                resultArea.textContent = `Status code: ${response.status}\nResponse: ${text}`;
+                qrcodeContainer.innerHTML = "<p style='color:red;'>Non-valid JSON.</p>";
+                loader.style.display = 'none';
+                return; 
+            }
+
+
+            try {
                 const compactJsonString = JSON.stringify(jsonResponse);
                 new QRCode(qrcodeContainer, {
                     text: compactJsonString,
@@ -128,9 +140,9 @@
                     colorLight : "#ffffff",
                     correctLevel : QRCode.CorrectLevel.L
                 });
-            } catch {
-                resultArea.textContent = `Status code: ${response.status}\nResponse: ${text}`;
-                qrcodeContainer.innerHTML = "<p style='color:red;'>Unable to generate QR code, ensure the JSON data are not broken.</p>";
+            } catch (qrError) {
+
+                qrcodeContainer.innerHTML = `<p style='color:red;'>Unable to generate the QR Code.</p>`;
             }
 
         } catch (error) {
@@ -138,7 +150,6 @@
         } finally {
             loader.style.display = 'none';
         }
-    });
 
     async function fetchData(type) {
         const resultArea = document.getElementById('resultArea');
